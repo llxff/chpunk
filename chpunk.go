@@ -13,6 +13,8 @@ import (
 	"sync"
 )
 
+const NewParagraph = "***"
+
 type DeeplText struct {
 	Text string
 }
@@ -32,8 +34,8 @@ type Translation struct {
 }
 
 func Translate(text string) *Translation {
-	if text == "***" {
-		return &Translation{Text: "***"}
+	if text == NewParagraph {
+		return &Translation{Text: NewParagraph}
 	} else {
 		return &Translation{Text: text, Yandex: yandex(text), Deepl: deepl(text)}
 	}
@@ -42,7 +44,7 @@ func Translate(text string) *Translation {
 func (t *Translation) AppendToFile(f io.Writer) {
 	fmt.Fprintln(f, t.Text)
 
-	if t.Text != "***" {
+	if t.Text != NewParagraph {
 		fmt.Fprintln(f, "")
 		fmt.Fprintln(f, t.Yandex)
 		fmt.Fprintln(f, "")
@@ -82,7 +84,7 @@ func yandex(text string) string {
 		"text": {text},
 	}
 
-	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id=dafec3b0.5d711b85.67c08ca2-5-0&srv=tr-text&lang=en-ru&reason=auto", formData)
+	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id=g&srv=tr-text&lang=en-ru&reason=auto", formData)
 
 	if err != nil {
 		log.Fatalln(err)
