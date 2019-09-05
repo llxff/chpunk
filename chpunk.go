@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"sync"
 )
 
@@ -31,7 +32,7 @@ type Translation struct {
 }
 
 func Translate(text string) *Translation {
-	if text == "" {
+	if text == "***" {
 		return &Translation{Text: "***"}
 	} else {
 		return &Translation{Text: text, Yandex: yandex(text), Deepl: deepl(text)}
@@ -71,13 +72,9 @@ func deepl(text string) string {
 		log.Fatalln(err)
 	}
 
-	decodedValue, err := url.QueryUnescape(result.Translations[0].Text)
+	defer resp.Body.Close()
 
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return decodedValue
+	return result.Translations[0].Text
 }
 
 func yandex(text string) string {
@@ -85,7 +82,7 @@ func yandex(text string) string {
 		"text": {text},
 	}
 
-	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id=6617361a.5d6f7b83.73baf1c9-2-0&srv=tr-text&lang=en-ru&reason=auto", formData)
+	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id=dafec3b0.5d711b85.67c08ca2-5-0&srv=tr-text&lang=en-ru&reason=auto", formData)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -96,6 +93,8 @@ func yandex(text string) string {
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		log.Fatalln(err)
 	}
+
+	defer resp.Body.Close()
 
 	if len(result.Text) == 0 {
 		return "https://translate.yandex.ru/?lang=en-ru&text=" + url.QueryEscape(text)
@@ -152,7 +151,11 @@ func chapter() []string {
 			log.Fatal(err)
 		}
 
-		lines = append(lines, record[0])
+		line := strings.TrimSpace(record[0])
+
+		if line != "" {
+			lines = append(lines, line)
+		}
 	}
 
 	return lines
