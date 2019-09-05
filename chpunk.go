@@ -24,94 +24,34 @@ type YandexTranslation struct {
 	Text []string
 }
 
-func main() {
-	lines := chapter()
-	translations := translate(lines)
+type Translation struct {
+	Text   string
+	Yandex string
+	Deepl  string
+}
 
-	f, err := os.Create("translation.txt")
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	for ix := range translations {
-		fmt.Fprintln(f, lines[ix])
-		fmt.Fprintln(f, "")
-		fmt.Fprintln(f, translations[ix]["yandex"])
-		fmt.Fprintln(f, "")
-		fmt.Fprintln(f, translations[ix]["deepl"])
-		fmt.Fprintln(f, "")
-	}
-
-	err = f.Close()
-
-	if err != nil {
-		fmt.Println(err)
-		return
+func Translate(text string) *Translation {
+	if text == "" {
+		return &Translation{Text: "***"}
+	} else {
+		return &Translation{Text: text, Yandex: yandex(text), Deepl: deepl(text)}
 	}
 }
 
-func translate(lines []string) []map[string]string {
-	translations := make([]map[string]string, len(lines), len(lines))
+func (t *Translation) AppendToFile(f io.Writer) {
+	fmt.Fprintln(f, t.Text)
 
-	wg := sync.WaitGroup{}
-	wg.Add(len(lines))
-
-	lock := sync.Mutex{}
-
-	for ix, line := range lines {
-		go func(ix int, line string) {
-			translation := map[string]string{
-				"yandex": yandex(line),
-				"deepl":  deepl(line),
-			}
-
-			lock.Lock()
-			fmt.Printf("Line %d has been translated\n", ix)
-
-			translations[ix] = translation
-			lock.Unlock()
-
-			wg.Done()
-		}(ix, line)
+	if t.Text != "***" {
+		fmt.Fprintln(f, "")
+		fmt.Fprintln(f, t.Yandex)
+		fmt.Fprintln(f, "")
+		fmt.Fprintln(f, t.Deepl)
 	}
 
-	wg.Wait()
-
-	return translations
-}
-
-func chapter() []string {
-	csvfile, err := os.Open(os.Args[1])
-
-	if err != nil {
-		log.Fatalln("Couldn't open the csv file", err)
-	}
-
-	r := csv.NewReader(csvfile)
-
-	lines := make([]string, 0, 10)
-
-	for {
-		record, err := r.Read()
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		lines = append(lines, record[0])
-	}
-
-	return lines
+	fmt.Fprintln(f, "")
 }
 
 func deepl(text string) string {
-	if text == "" || text == "***" {
-		return text
-	}
-
 	formData := url.Values{
 		"auth_key":    {os.Getenv("DEEPL_KEY")},
 		"text":        {text},
@@ -141,10 +81,6 @@ func deepl(text string) string {
 }
 
 func yandex(text string) string {
-	if text == "" || text == "***" {
-		return text
-	}
-
 	formData := url.Values{
 		"text": {text},
 	}
@@ -172,4 +108,79 @@ func yandex(text string) string {
 
 		return decodedValue
 	}
+}
+
+func main() {
+	lines := chapter()
+	translations := translate(lines)
+
+	f, err := os.Create("translation.txt")
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	for _, translation := range translations {
+		translation.AppendToFile(f)
+	}
+
+	err = f.Close()
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+}
+
+func chapter() []string {
+	csvfile, err := os.Open(os.Args[1])
+
+	if err != nil {
+		log.Fatalln("Couldn't open the csv file", err)
+	}
+
+	r := csv.NewReader(csvfile)
+
+	lines := make([]string, 0, 10)
+
+	for {
+		record, err := r.Read()
+		if err == io.EOF {
+			break
+		}
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		lines = append(lines, record[0])
+	}
+
+	return lines
+}
+
+func translate(lines []string) []*Translation {
+	translations := make([]*Translation, len(lines), len(lines))
+
+	wg := sync.WaitGroup{}
+	wg.Add(len(lines))
+
+	lock := sync.Mutex{}
+
+	for ix, line := range lines {
+		go func(ix int, line string) {
+			translation := Translate(line)
+
+			lock.Lock()
+			translations[ix] = translation
+			lock.Unlock()
+
+			fmt.Printf("Line %d has been translated\n", ix)
+
+			wg.Done()
+		}(ix, line)
+	}
+
+	wg.Wait()
+
+	return translations
 }
