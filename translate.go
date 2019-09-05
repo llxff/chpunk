@@ -162,7 +162,7 @@ func yandex(text string) string {
 	}
 
 	if len(result.Text) == 0 {
-		return "=== LIMIT ==="
+		return "https://translate.yandex.ru/?lang=en-ru&text=" + url.QueryEscape(text)
 	} else {
 		decodedValue, err := url.QueryUnescape(result.Text[0])
 
