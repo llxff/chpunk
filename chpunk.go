@@ -84,7 +84,7 @@ func yandex(text string) string {
 		"text": {text},
 	}
 
-	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id=g&srv=tr-text&lang=en-ru&reason=auto", formData)
+	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id=247bfab8.5d718335.a2cefea3-1-0&srv=tr-text&lang=en-ru&reason=auto", formData)
 
 	if err != nil {
 		log.Fatalln(err)
