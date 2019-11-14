@@ -1,0 +1,12 @@
+tools:
+  golint:
+    enabled: false
+  staticcheck:
+    enabled: false
+  go vet:
+    enabled: false
+  gosec:
+    enabled: false
+  golangci-lint:
+    enabled: true
+    parameters: 'run --print-issued-lines=false'

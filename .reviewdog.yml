@@ -1,9 +1,0 @@
-runner:
-  golint:
-    cmd: golint $(go list ./... | grep -v /vendor/)
-    format: golint
-  govet:
-    cmd: go vet $(go list ./... | grep -v /vendor/)
-    format: govet
-  golangci:
-    cmd: golangci-lint run --out-format=line-number ./...
