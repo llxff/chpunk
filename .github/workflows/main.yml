@@ -1,16 +1,16 @@
-name: Pronto
+name: goreview
 on: [pull_request]
-
 jobs:
-  pronto:
+  reviewdog:
+    name: reviewdog
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@master
-      - uses: nickhstr/action-setup-golangci-lint@v0.1.0
-        with:
-          version: 1.20.1
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: '2.6'
-      - run: gem install pronto pronto-golang
-      - run: PRONTO_PULL_REQUEST_ID="$(jq --raw-output .number "$GITHUB_EVENT_PATH")" PRONTO_GITHUB_ACCESS_TOKEN="${{ secrets.GITHUB_TOKEN }}" pronto run -f github_status github_pr -c origin/master
+      - name: Setup reviewdog
+        run: |
+          mkdir -p $HOME/bin && curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $HOME/bin
+          echo ::add-path::$HOME/bin
+      - name: Run reviewdog
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewdog -reporter=github-pr-check -runners=golint,govet
