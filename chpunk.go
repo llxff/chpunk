@@ -164,7 +164,8 @@ func chapter() []string {
 }
 
 func translate(lines []string) []*Translation {
-	translations := make([]*Translation, len(lines), len(lines))
+	l := len(lines)
+	translations := make([]*Translation, l, l)
 
 	wg := sync.WaitGroup{}
 	wg.Add(len(lines))
