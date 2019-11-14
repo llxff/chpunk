@@ -1,2 +1,2 @@
-golangci-lint:
+golangci:
   cmd: golangci-lint run
