@@ -5,6 +5,7 @@ jobs:
     name: reviewdog
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@master
       - name: Setup reviewdog
         run: |
           mkdir -p $HOME/bin && curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh| sh -s -- -b $HOME/bin
@@ -13,5 +14,4 @@ jobs:
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          ls -la .
           reviewdog -reporter=github-pr-check -runners=golangci-lint -conf=.reviewdog.yml
