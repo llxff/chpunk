@@ -8,6 +8,8 @@ import (
 	"os"
 )
 
+var apiID = os.Getenv("YANDEX_ID")
+
 type YandexTranslation struct {
 	Text []string
 }
@@ -17,7 +19,7 @@ func Translate(text string) string {
 		"text": {text},
 	}
 
-	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id="+os.Getenv("YANDEX_ID")+"&srv=tr-text&lang=en-ru&reason=auto", formData)
+	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id="+apiID+"&srv=tr-text&lang=en-ru&reason=auto", formData)
 
 	if err != nil {
 		log.Fatalln(err)

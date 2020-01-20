@@ -29,7 +29,7 @@ func Export(c []*translation.Content, fileName string) {
 func appendToFile(c *translation.Content, f io.Writer) {
 	fmt.Fprintln(f, c.Text)
 
-	if c.IsNewParagraph() {
+	if !c.IsNewParagraph() {
 		fmt.Fprintln(f, "")
 		fmt.Fprintln(f, c.Yandex)
 		fmt.Fprintln(f, "")
@@ -37,4 +37,5 @@ func appendToFile(c *translation.Content, f io.Writer) {
 	}
 
 	fmt.Fprintln(f, "")
+
 }

@@ -8,6 +8,8 @@ import (
 	"os"
 )
 
+var apiKey = os.Getenv("DEEPL_KEY")
+
 type DeeplText struct {
 	Text string
 }
@@ -18,13 +20,13 @@ type DeeplTranslation struct {
 
 func Translate(text string) string {
 	formData := url.Values{
-		"auth_key":    {os.Getenv("DEEPL_KEY")},
+		"auth_key":    {apiKey},
 		"text":        {text},
 		"source_lang": {"en"},
 		"target_lang": {"ru"},
 	}
 
-	resp, err := http.PostForm("https://api.deepl.com/v1/translate", formData)
+	resp, err := http.PostForm("https://api.deepl.com/v2/translate", formData)
 
 	if err != nil {
 		log.Fatalln(err)
