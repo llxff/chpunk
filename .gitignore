@@ -3,3 +3,4 @@
 main
 input.csv
 translation.txt
+*.json

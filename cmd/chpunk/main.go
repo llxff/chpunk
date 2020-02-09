@@ -1,15 +1,20 @@
 package main
 
 import (
-	"chpunk/export/textfile"
-	"chpunk/import/csvfile"
-	"chpunk/translation"
+	"chpunk/commands/file"
+	"chpunk/commands/sheets"
+	"fmt"
+	"github.com/spf13/cobra"
 	"os"
 )
 
 func main() {
-	lines := csvfile.Import(os.Args[1])
-	translations := translation.Translate(lines)
+	var rootCmd = &cobra.Command{Use: "translate"}
+	rootCmd.AddCommand(file.Command())
+	rootCmd.AddCommand(sheets.Command())
 
-	textfile.Export(translations, "translation.txt")
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 }
