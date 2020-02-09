@@ -9,8 +9,8 @@ import (
 
 func Command() *cobra.Command {
 	return &cobra.Command{
-		Use:   "sheet",
-		Short: "sheet [doc id] [path to file with translation (default translation.txt)]",
+		Use:   "sheet [doc id] [path to file with translation (default translation.txt)]",
+		Short: "Translates a given Google Spreadsheet",
 		Long:  "Translates a given Google Spreadsheet with Deepl and Yandex translators and saves output to a given file",
 		Args:  cobra.MinimumNArgs(1),
 		Run:   run,
