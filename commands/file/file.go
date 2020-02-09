@@ -11,17 +11,17 @@ import (
 func Command() *cobra.Command {
 	return &cobra.Command{
 		Use:   "file [path to file] [path to file with translation (default translation.txt)]",
-		Short: "Translate a given file",
-		Long:  "Translate a given file with Deepl and Yandex translators and save output to file",
+		Short: "Translates a given file",
+		Long:  "Translates a given file with Deepl and Yandex translators and saves output to a given file",
 		Args:  cobra.MinimumNArgs(1),
 		Run:   run,
 	}
 }
 
 func run(_ *cobra.Command, args []string) {
-	lines := csvfile.Import(args[1])
+	lines := csvfile.Import(args[0])
 	translations := translation.Translate(lines)
-	outputFile := args[2]
+	outputFile := args[1]
 
 	if strings.TrimSpace(outputFile) == "" {
 		outputFile = "translation.txt"

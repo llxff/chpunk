@@ -2,7 +2,7 @@ package main
 
 import (
 	"chpunk/commands/file"
-	"chpunk/commands/sheets"
+	"chpunk/commands/sheet"
 	"fmt"
 	"github.com/spf13/cobra"
 	"os"
@@ -11,7 +11,7 @@ import (
 func main() {
 	var rootCmd = &cobra.Command{Use: "translate"}
 	rootCmd.AddCommand(file.Command())
-	rootCmd.AddCommand(sheets.Command())
+	rootCmd.AddCommand(sheet.Command())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
