@@ -5,20 +5,17 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 )
 
-var apiKey = os.Getenv("DEEPL_KEY")
-
-type DeeplText struct {
+type Text struct {
 	Text string
 }
 
-type DeeplTranslation struct {
-	Translations []DeeplText
+type Translation struct {
+	Translations []Text
 }
 
-func Translate(text string) string {
+func Translate(apiKey string, text string) string {
 	formData := url.Values{
 		"auth_key":    {apiKey},
 		"text":        {text},
@@ -32,7 +29,7 @@ func Translate(text string) string {
 		log.Fatalln(err)
 	}
 
-	var result DeeplTranslation
+	var result Translation
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		log.Fatalln(err)

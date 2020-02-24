@@ -5,27 +5,24 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 )
 
-var apiID = os.Getenv("YANDEX_ID")
-
-type YandexTranslation struct {
+type Translation struct {
 	Text []string
 }
 
-func Translate(text string) string {
+func Translate(apiKey string, text string) string {
 	formData := url.Values{
 		"text": {text},
 	}
 
-	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id="+apiID+"&srv=tr-text&lang=en-ru&reason=auto", formData)
+	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id="+apiKey+"&srv=tr-text&lang=en-ru&reason=auto", formData)
 
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	var result YandexTranslation
+	var result Translation
 
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		log.Fatalln(err)

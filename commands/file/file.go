@@ -3,6 +3,7 @@ package file
 import (
 	"chpunk/export/textfile"
 	"chpunk/import/csvfile"
+	"chpunk/settings"
 	"chpunk/translation"
 	"github.com/spf13/cobra"
 	"strings"
@@ -19,8 +20,9 @@ func Command() *cobra.Command {
 }
 
 func run(_ *cobra.Command, args []string) {
+	config := settings.Get()
 	lines := csvfile.Import(args[0])
-	translations := translation.Translate(lines)
+	translations := translation.Translate(*config, lines)
 	outputFile := args[1]
 
 	if strings.TrimSpace(outputFile) == "" {

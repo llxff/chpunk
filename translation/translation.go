@@ -1,8 +1,9 @@
 package translation
 
 import (
-	"chpunk/deepl"
-	"chpunk/yandex"
+	"chpunk/settings"
+	"chpunk/translators/deepl"
+	"chpunk/translators/yandex"
 	"fmt"
 	"sync"
 )
@@ -19,7 +20,7 @@ func (c *Content) IsNewParagraph() bool {
 	return c.Text == NewParagraph
 }
 
-func Translate(lines []string) []*Content {
+func Translate(config settings.Config, lines []string) []*Content {
 	translations := make([]*Content, len(lines))
 
 	wg := sync.WaitGroup{}
@@ -29,7 +30,7 @@ func Translate(lines []string) []*Content {
 
 	for ix, line := range lines {
 		go func(ix int, line string) {
-			translation := translateContent(line)
+			translation := translateContent(config, line)
 
 			lock.Lock()
 			translations[ix] = translation
@@ -46,14 +47,14 @@ func Translate(lines []string) []*Content {
 	return translations
 }
 
-func translateContent(text string) *Content {
+func translateContent(config settings.Config, text string) *Content {
 	if text == NewParagraph {
 		return &Content{Text: NewParagraph}
 	} else {
 		return &Content{
 			Text:   text,
-			Yandex: yandex.Translate(text),
-			Deepl:  deepl.Translate(text),
+			Yandex: yandex.Translate(config.Yandex, text),
+			Deepl:  deepl.Translate(config.Deepl, text),
 		}
 	}
 }

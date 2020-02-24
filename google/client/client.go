@@ -18,23 +18,36 @@ const scopes = "https://www.googleapis.com/auth/spreadsheets.readonly"
 
 // Retrieve a token, saves the token, then returns the generated client.
 func Get(tokenFile string) *http.Client {
-	b, err := ioutil.ReadFile(credentialsFile)
-	if err != nil {
-		log.Fatalf("Unable to read client secret file: %v", err)
-	}
-
-	config, err := google.ConfigFromJSON(b, scopes, drive.DriveMetadataReadonlyScope)
+	c, err := config()
 	if err != nil {
 		log.Fatalf("Unable to parse client secret file to config: %v", err)
 	}
 
 	tok, err := tokenFromFile(tokenFile)
 	if err != nil {
-		tok = getTokenFromWeb(config)
+		tok = getTokenFromWeb(c)
 		saveToken(tokenFile, tok)
 	}
 
-	return config.Client(context.Background(), tok)
+	return c.Client(context.Background(), tok)
+}
+
+func GetFromToken(tok *oauth2.Token) (*http.Client, error) {
+	c, err := config()
+	if err != nil {
+		return nil, err
+	}
+
+	return c.Client(context.Background(), tok), nil
+}
+
+func config() (*oauth2.Config, error) {
+	b, err := ioutil.ReadFile(credentialsFile)
+	if err != nil {
+		return nil, err
+	}
+
+	return google.ConfigFromJSON(b, scopes, drive.DriveMetadataReadonlyScope)
 }
 
 func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {

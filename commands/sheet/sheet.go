@@ -3,6 +3,7 @@ package sheet
 import (
 	"chpunk/export/textfile"
 	"chpunk/import/sheets"
+	"chpunk/settings"
 	"chpunk/translation"
 	"github.com/spf13/cobra"
 )
@@ -18,8 +19,9 @@ func Command() *cobra.Command {
 }
 
 func run(_ *cobra.Command, args []string) {
+	config := settings.Get()
 	lines := sheets.Import(args[0])
-	translations := translation.Translate(lines)
+	translations := translation.Translate(*config, lines)
 	outputFile := "translation.txt"
 
 	if len(args) > 1 {
