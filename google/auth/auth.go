@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-const credentialsFile = "credentials.json"
+const credentialsFile = "google.json"
 const scopes = "https://www.googleapis.com/auth/spreadsheets.readonly"
 
 func GetAuthURL() string {

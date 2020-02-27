@@ -14,7 +14,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-const credentialsFile = "credentials.json"
+const credentialsFile = "google.json"
 const scopes = "https://www.googleapis.com/auth/spreadsheets.readonly"
 
 // Retrieve a token, saves the token, then returns the generated client.
