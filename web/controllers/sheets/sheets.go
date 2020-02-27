@@ -5,9 +5,10 @@ import (
 	"chpunk/google/spreadsheets"
 	"encoding/base64"
 	"encoding/json"
+	"net/http"
+
 	"github.com/labstack/echo/v4"
 	"golang.org/x/oauth2"
-	"net/http"
 )
 
 type req struct {
@@ -21,6 +22,7 @@ func (r *req) oauthToken() (*oauth2.Token, error) {
 	}
 
 	var t oauth2.Token
+
 	err = json.Unmarshal(payload, &t)
 	if err != nil {
 		return nil, err
@@ -45,7 +47,7 @@ func Handle(c echo.Context) error {
 		return err
 	}
 
-	s := &spreadsheets.Client{HttpClient: conf}
+	s := &spreadsheets.Client{HTTPClient: conf}
 	data := s.Values(c.Param("id"), "A1:A")
 
 	return c.JSON(http.StatusOK, data)

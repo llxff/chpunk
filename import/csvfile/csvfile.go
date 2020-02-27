@@ -24,6 +24,7 @@ func Import(fileName string) []string {
 		if err == io.EOF {
 			break
 		}
+
 		if err != nil {
 			log.Fatal(err)
 		}

@@ -50,11 +50,11 @@ func Translate(config settings.Config, lines []string) []*Content {
 func translateContent(config settings.Config, text string) *Content {
 	if text == NewParagraph {
 		return &Content{Text: NewParagraph}
-	} else {
-		return &Content{
-			Text:   text,
-			Yandex: yandex.Translate(config.Yandex, text),
-			Deepl:  deepl.Translate(config.Deepl, text),
-		}
+	}
+
+	return &Content{
+		Text:   text,
+		Yandex: yandex.Translate(config.Yandex, text),
+		Deepl:  deepl.Translate(config.Deepl, text),
 	}
 }

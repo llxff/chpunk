@@ -18,8 +18,8 @@ func Get() *Config {
 	}
 
 	var c Config
-	err = json.Unmarshal(data, &c)
-	if err != nil {
+
+	if err = json.Unmarshal(data, &c); err != nil {
 		log.Fatalln(err)
 	}
 

@@ -5,12 +5,13 @@ import (
 	"chpunk/commands/server"
 	"chpunk/commands/sheet"
 	"fmt"
-	"github.com/spf13/cobra"
 	"os"
+
+	"github.com/spf13/cobra"
 )
 
 func main() {
-	var rootCmd = &cobra.Command{Use: "translate"}
+	rootCmd := &cobra.Command{Use: "translate"}
 	rootCmd.AddCommand(file.Command())
 	rootCmd.AddCommand(sheet.Command())
 	rootCmd.AddCommand(server.Command())

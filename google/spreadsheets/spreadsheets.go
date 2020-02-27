@@ -1,22 +1,23 @@
 package spreadsheets
 
 import (
-	"google.golang.org/api/sheets/v4"
 	"log"
 	"net/http"
+
+	"google.golang.org/api/sheets/v4"
 )
 
 type Client struct {
-	HttpClient *http.Client
+	HTTPClient *http.Client
 }
 
-func (c *Client) Values(spreadsheetId string, readRange string) [][]interface{} {
-	srv, err := sheets.New(c.HttpClient)
+func (c *Client) Values(spreadsheetID string, readRange string) [][]interface{} {
+	srv, err := sheets.New(c.HTTPClient)
 	if err != nil {
 		log.Fatalf("Error: %v", err)
 	}
 
-	resp, err := srv.Spreadsheets.Values.Get(spreadsheetId, readRange).Do()
+	resp, err := srv.Spreadsheets.Values.Get(spreadsheetID, readRange).Do()
 	if err != nil {
 		log.Fatalf("Unable to retrieve data from sheet: %v", err)
 	}

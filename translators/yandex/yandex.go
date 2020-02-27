@@ -12,11 +12,17 @@ type Translation struct {
 }
 
 func Translate(apiKey string, text string) string {
+	u := url.URL{
+		Scheme:   "https",
+		Host:     "translate.yandex.net",
+		Path:     "/api/v1/tr.json/translate",
+		RawQuery: "id=" + apiKey + "&srv=tr-text&lang=en-ru&reason=auto",
+	}
+
 	formData := url.Values{
 		"text": {text},
 	}
-
-	resp, err := http.PostForm("https://translate.yandex.net/api/v1/tr.json/translate?id="+apiKey+"&srv=tr-text&lang=en-ru&reason=auto", formData)
+	resp, err := http.PostForm(u.String(), formData)
 
 	if err != nil {
 		log.Fatalln(err)
@@ -32,13 +38,13 @@ func Translate(apiKey string, text string) string {
 
 	if len(result.Text) == 0 {
 		return "https://translate.yandex.ru/?lang=en-ru&text=" + url.QueryEscape(text)
-	} else {
-		decodedValue, err := url.QueryUnescape(result.Text[0])
-
-		if err != nil {
-			log.Fatalln(err)
-		}
-
-		return decodedValue
 	}
+
+	decodedValue, err := url.QueryUnescape(result.Text[0])
+
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	return decodedValue
 }

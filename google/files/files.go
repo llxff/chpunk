@@ -8,11 +8,11 @@ import (
 )
 
 type Client struct {
-	HttpClient *http.Client
+	HTTPClient *http.Client
 }
 
 func (c *Client) Files() (*drive.FileList, error) {
-	srv, err := drive.New(c.HttpClient)
+	srv, err := drive.New(c.HTTPClient)
 	if err != nil {
 		log.Fatalf("Unable to retrieve Sheets client: %v", err)
 	}

@@ -37,5 +37,4 @@ func appendToFile(c *translation.Content, f io.Writer) {
 	}
 
 	fmt.Fprintln(f, "")
-
 }

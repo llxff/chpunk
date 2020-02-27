@@ -8,7 +8,7 @@ import (
 
 func Import(fileName string) (lines []string) {
 	c := client.Get("token.json")
-	s := &spreadsheets.Client{HttpClient: c}
+	s := &spreadsheets.Client{HTTPClient: c}
 
 	data := s.Values(fileName, "A1:A")
 
