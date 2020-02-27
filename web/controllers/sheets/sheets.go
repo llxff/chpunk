@@ -1,54 +1,32 @@
 package sheets
 
 import (
-	"chpunk/google/client"
+	"chpunk/google/files"
 	"chpunk/google/spreadsheets"
-	"encoding/base64"
-	"encoding/json"
+	"chpunk/web/middlewares"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"golang.org/x/oauth2"
 )
 
-type req struct {
-	Token string `json:"token"`
+func Index(ctx echo.Context) error {
+	c := ctx.Get(middlewares.GoogleClient).(*http.Client)
+	s := files.Client{HTTPClient: c}
+
+	f, err := s.Files(100)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(http.StatusOK, f)
 }
 
-func (r *req) oauthToken() (*oauth2.Token, error) {
-	payload, err := base64.StdEncoding.DecodeString(r.Token)
-	if err != nil {
-		return nil, err
-	}
+func Get(ctx echo.Context) error {
+	c := ctx.Get(middlewares.GoogleClient).(*http.Client)
 
-	var t oauth2.Token
+	s := &spreadsheets.Client{HTTPClient: c}
 
-	err = json.Unmarshal(payload, &t)
-	if err != nil {
-		return nil, err
-	}
+	data := s.Values(ctx.Param("id"), "A1:A")
 
-	return &t, nil
-}
-
-func Handle(c echo.Context) error {
-	r := new(req)
-	if err := c.Bind(r); err != nil {
-		return err
-	}
-
-	token, err := r.oauthToken()
-	if err != nil {
-		return err
-	}
-
-	conf, err := client.GetFromToken(token)
-	if err != nil {
-		return err
-	}
-
-	s := &spreadsheets.Client{HTTPClient: conf}
-	data := s.Values(c.Param("id"), "A1:A")
-
-	return c.JSON(http.StatusOK, data)
+	return ctx.JSON(http.StatusOK, data)
 }

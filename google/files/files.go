@@ -11,7 +11,7 @@ type Client struct {
 	HTTPClient *http.Client
 }
 
-func (c *Client) Files() (*drive.FileList, error) {
+func (c *Client) Files(pageSize int64) (*drive.FileList, error) {
 	srv, err := drive.New(c.HTTPClient)
 	if err != nil {
 		log.Fatalf("Unable to retrieve Sheets client: %v", err)
@@ -20,8 +20,9 @@ func (c *Client) Files() (*drive.FileList, error) {
 	return srv.
 		Files.
 		List().
+		OrderBy("modifiedByMeTime desc").
 		Q("mimeType='application/vnd.google-apps.spreadsheet'").
-		PageSize(10).
+		PageSize(pageSize).
 		Fields("nextPageToken, files(id, name, mimeType)").
 		Do()
 }
