@@ -11,6 +11,7 @@ Usage:
 Available Commands:
   file        Translates a given file
   help        Help about any command
+  server      Starts server
   sheet       Translates a given Google Spreadsheet
 
 Flags:
