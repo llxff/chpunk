@@ -1,6 +1,7 @@
 package main
 
 import (
+	"chpunk/commands/doc"
 	"chpunk/commands/file"
 	"chpunk/commands/server"
 	"chpunk/commands/sheet"
@@ -15,6 +16,7 @@ func main() {
 	rootCmd.AddCommand(file.Command())
 	rootCmd.AddCommand(sheet.Command())
 	rootCmd.AddCommand(server.Command())
+	rootCmd.AddCommand(doc.Command())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

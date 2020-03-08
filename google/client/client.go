@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"google.golang.org/api/docs/v1"
+	"google.golang.org/api/sheets/v4"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -15,7 +17,6 @@ import (
 )
 
 const credentialsFile = "google.json"
-const scopes = "https://www.googleapis.com/auth/spreadsheets.readonly"
 
 // Retrieve a token, saves the token, then returns the generated client.
 func Get(tokenFile string) *http.Client {
@@ -48,7 +49,7 @@ func config() (*oauth2.Config, error) {
 		return nil, err
 	}
 
-	return google.ConfigFromJSON(b, scopes, drive.DriveMetadataReadonlyScope)
+	return google.ConfigFromJSON(b, drive.DriveMetadataReadonlyScope, sheets.SpreadsheetsReadonlyScope, docs.DriveScope)
 }
 
 func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
