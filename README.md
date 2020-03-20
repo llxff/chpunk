@@ -9,6 +9,7 @@ Usage:
   translate [command]
 
 Available Commands:
+  doc         Translates a given Google Spreadsheet and past translation to a given Google Doc
   file        Translates a given file
   help        Help about any command
   server      Starts server
@@ -20,10 +21,10 @@ Flags:
 Use "translate [command] --help" for more information about a command.
 ```
 
-Envs:
+Setup:
 
-1. YANDEX_ID - id from Yandex Translate 🕵️‍♂️
-2. DEEPL_KEY - API Key from deepl.com
+1. Enable Google Docs API https://developers.google.com/docs/api/quickstart/go
+2. Set api keys for Deepl and Yandex translators to `translators.json` (The project uses public version of [Yandex Translate](https://translate.yandex.ru/), for some reasons it makes better translation than official API)
 
 ## This is a pet-project
 
