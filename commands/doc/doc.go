@@ -3,25 +3,31 @@ package doc
 import (
 	"chpunk/google/client"
 	"chpunk/google/docs"
+	"chpunk/import/sheets"
+	"chpunk/settings"
+	"chpunk/translation"
 	"github.com/spf13/cobra"
 	"log"
 )
 
 func Command() *cobra.Command {
 	return &cobra.Command{
-		Use:   "doc [doc id] [path to file with translation (default translation.txt)]",
-		Short: "Translates a given Google Spreadsheet",
-		Long:  "Translates a given Google Spreadsheet with Deepl and Yandex translators and saves output to a given file",
-		Args:  cobra.MinimumNArgs(1),
+		Use:   "doc [spreadsheet id] [doc id]",
+		Short: "Translates a given Google Spreadsheet and past translation to a given Google Doc",
+		Args:  cobra.MinimumNArgs(2),
 		Run:   run,
 	}
 }
 
 func run(_ *cobra.Command, args []string) {
+	config := settings.Get()
+	lines := sheets.Import(args[0])
+	translations := translation.Translate(*config, lines)
+
 	c := client.Get("token.json")
 	d := &docs.Client{HTTPClient: c}
 
-	err := d.NewChapter(args[0], []string{"1", "***", "3"})
+	err := d.NewChapter(args[1], translations)
 	if err != nil {
 		log.Fatalln(err)
 	}

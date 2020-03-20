@@ -40,11 +40,5 @@ func Translate(apiKey string, text string) string {
 		return "https://translate.yandex.ru/?lang=en-ru&text=" + url.QueryEscape(text)
 	}
 
-	decodedValue, err := url.QueryUnescape(result.Text[0])
-
-	if err != nil {
-		log.Fatalln(err)
-	}
-
-	return decodedValue
+	return result.Text[0]
 }

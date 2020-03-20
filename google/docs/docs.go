@@ -1,6 +1,7 @@
 package docs
 
 import (
+	"chpunk/translation"
 	"google.golang.org/api/docs/v1"
 	"net/http"
 )
@@ -9,7 +10,7 @@ type Client struct {
 	HTTPClient *http.Client
 }
 
-func (c *Client) NewChapter(docID string, texts []string) error {
+func (c *Client) NewChapter(docID string, translations []*translation.Content) error {
 	srv, err := docs.New(c.HTTPClient)
 	if err != nil {
 		return err
@@ -36,60 +37,77 @@ func (c *Client) NewChapter(docID string, texts []string) error {
 			},
 		})
 
-		ind = ind + 2
+		ind += 2
 	}
 
-	requests = append(requests, paragraph(ind, texts[0]))
+	request, nextIndex := paragraph(ind, translations[0].Yandex)
+	requests = append(requests, request)
 	requests = append(requests, &docs.Request{
-		UpdateParagraphStyle:        &docs.UpdateParagraphStyleRequest{
+		UpdateParagraphStyle: &docs.UpdateParagraphStyleRequest{
 			Fields: "*",
-			ParagraphStyle:  &docs.ParagraphStyle{
-				NamedStyleType:      "HEADING_1",
+			ParagraphStyle: &docs.ParagraphStyle{
+				NamedStyleType: "HEADING_1",
 			},
-			Range:           &docs.Range{
-				EndIndex:        ind + int64(len(texts[0])) + 1,
-				SegmentId:       "",
-				StartIndex:      ind,
+			Range: &docs.Range{
+				EndIndex:   nextIndex - 1,
+				SegmentId:  "",
+				StartIndex: ind,
 			},
 		},
 	})
 
-	ind = ind + int64(len(texts[0])) + 1
-
 	requests = append(requests, &docs.Request{
-		UpdateParagraphStyle:        &docs.UpdateParagraphStyleRequest{
+		UpdateParagraphStyle: &docs.UpdateParagraphStyleRequest{
 			Fields: "*",
-			ParagraphStyle:  &docs.ParagraphStyle{
-				NamedStyleType:      "NORMAL_TEXT",
+			ParagraphStyle: &docs.ParagraphStyle{
+				NamedStyleType: "NORMAL_TEXT",
 			},
-			Range:           &docs.Range{
-				EndIndex:        ind + 1,
-				SegmentId:       "",
-				StartIndex:      ind,
+			Range: &docs.Range{
+				EndIndex:   nextIndex,
+				SegmentId:  "",
+				StartIndex: nextIndex - 1,
 			},
 		},
 	})
 
-	ind = ind + 1
+	ind = nextIndex
 
-	for _, t := range texts[1:] {
-		requests = append(requests, paragraph(ind, t))
-		if t == "***" {
+	request, nextIndex = paragraph(ind, translations[0].Text)
+	requests = append(requests, request)
+	ind = nextIndex
+
+	request, nextIndex = paragraph(ind, translations[0].Deepl)
+	requests = append(requests, request)
+	ind = nextIndex
+
+	for _, t := range translations[1:] {
+		request, nextIndex = paragraph(ind, t.Text)
+		requests = append(requests, request)
+
+		if t.IsNewParagraph() {
 			requests = append(requests, &docs.Request{
-				UpdateParagraphStyle:        &docs.UpdateParagraphStyleRequest{
+				UpdateParagraphStyle: &docs.UpdateParagraphStyleRequest{
 					Fields: "*",
-					ParagraphStyle:  &docs.ParagraphStyle{
+					ParagraphStyle: &docs.ParagraphStyle{
 						Alignment:      "CENTER",
 						NamedStyleType: "NORMAL_TEXT",
 					},
-					Range:           &docs.Range{
-						EndIndex:        ind + int64(len(t)) + 1,
-						StartIndex:      ind,
+					Range: &docs.Range{
+						EndIndex:   nextIndex - 1,
+						StartIndex: ind,
 					},
 				},
 			})
+		} else {
+			request, nextIndex = paragraph(nextIndex, t.Yandex)
+			requests = append(requests, request)
+			ind = nextIndex
+
+			request, nextIndex = paragraph(ind, t.Deepl)
+			requests = append(requests, request)
 		}
-		ind = ind + int64(len(t)) + 2
+
+		ind = nextIndex
 	}
 
 	uReq := &docs.BatchUpdateDocumentRequest{
@@ -100,8 +118,8 @@ func (c *Client) NewChapter(docID string, texts []string) error {
 	return err
 }
 
-func paragraph(index int64, text string) *docs.Request {
-	return &docs.Request{
+func paragraph(index int64, text string) (*docs.Request, int64) {
+	request := &docs.Request{
 		InsertText: &docs.InsertTextRequest{
 			Location: &docs.Location{
 				Index: index,
@@ -109,4 +127,12 @@ func paragraph(index int64, text string) *docs.Request {
 			Text: text + "\n\n",
 		},
 	}
+
+	endIndex := index + length(text) + 2
+
+	return request, endIndex
+}
+
+func length(text string) int64 {
+	return int64(len([]rune(text)))
 }
