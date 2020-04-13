@@ -26,6 +26,18 @@ Setup:
 1. Enable Google Docs API https://developers.google.com/docs/api/quickstart/go
 2. Set api keys for Deepl and Yandex translators to `translators.json` (The project uses public version of [Yandex Translate](https://translate.yandex.ru/), for some reasons it makes better translation than official API)
 
+## Frontend:
+
+Frontend uses Vue.js and yarn.
+
+To start just frontend:
+
+`$ make frontend`
+
+To start frontend with API:
+
+`$ make`
+
 ## This is a pet-project
 
 I wrote it to help my wife 👩‍💻 with her work, don't expect much from it. No tests, DRY, SOLID and other buzzwords, this code has been written for fun.
