@@ -1,8 +1,8 @@
 package googledoc
 
 import (
-	"chpunk/google/doc"
-	"chpunk/translation"
+	"chpunk/internal/google/doc"
+	"chpunk/internal/translation"
 	"google.golang.org/api/docs/v1"
 )
 

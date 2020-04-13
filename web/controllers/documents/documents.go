@@ -1,7 +1,7 @@
 package documents
 
 import (
-	"chpunk/google/files"
+	"chpunk/internal/google/files"
 	"chpunk/web/middlewares"
 	"github.com/labstack/echo/v4"
 	"net/http"
@@ -38,6 +38,7 @@ func Create(ctx echo.Context) error {
 	}
 
 	s := googleClient(ctx)
+
 	f, err := s.CreateDocument(params.Name)
 	if err != nil {
 		return err

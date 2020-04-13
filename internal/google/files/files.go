@@ -54,5 +54,6 @@ func (c *Client) create(name string, mimeType string) (*drive.File, error) {
 	}
 
 	f := &drive.File{MimeType: mimeType, Name: name}
+
 	return srv.Files.Create(f).Do()
 }

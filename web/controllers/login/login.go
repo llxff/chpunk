@@ -1,7 +1,7 @@
 package login
 
 import (
-	"chpunk/google/auth"
+	"chpunk/internal/google/auth"
 	"encoding/base64"
 	"encoding/json"
 	"github.com/labstack/echo/v4"

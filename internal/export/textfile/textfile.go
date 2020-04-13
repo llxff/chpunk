@@ -1,7 +1,7 @@
 package textfile
 
 import (
-	"chpunk/translation"
+	"chpunk/internal/translation"
 	"fmt"
 	"io"
 	"os"

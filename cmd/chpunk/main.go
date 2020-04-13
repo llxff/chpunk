@@ -1,10 +1,10 @@
 package main
 
 import (
-	"chpunk/commands/doc"
-	"chpunk/commands/file"
-	"chpunk/commands/server"
-	"chpunk/commands/sheet"
+	"chpunk/cmd/doc"
+	"chpunk/cmd/file"
+	"chpunk/cmd/server"
+	"chpunk/cmd/sheet"
 	"fmt"
 	"os"
 

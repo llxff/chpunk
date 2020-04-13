@@ -1,8 +1,8 @@
 package sheets
 
 import (
-	"chpunk/google/client"
-	"chpunk/google/spreadsheets"
+	"chpunk/internal/google/client"
+	"chpunk/internal/google/spreadsheets"
 	"fmt"
 )
 

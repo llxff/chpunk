@@ -1,12 +1,12 @@
 package doc
 
 import (
-	"chpunk/export/googledoc"
-	"chpunk/google/client"
-	"chpunk/google/doc"
-	"chpunk/import/sheets"
-	"chpunk/settings"
-	"chpunk/translation"
+	"chpunk/internal/export/googledoc"
+	"chpunk/internal/google/client"
+	"chpunk/internal/google/doc"
+	"chpunk/internal/import/sheets"
+	"chpunk/internal/settings"
+	"chpunk/internal/translation"
 	"github.com/spf13/cobra"
 	"log"
 )

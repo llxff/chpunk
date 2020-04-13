@@ -1,10 +1,10 @@
 package file
 
 import (
-	"chpunk/export/textfile"
-	"chpunk/import/csvfile"
-	"chpunk/settings"
-	"chpunk/translation"
+	"chpunk/internal/export/textfile"
+	"chpunk/internal/import/csvfile"
+	"chpunk/internal/settings"
+	"chpunk/internal/translation"
 	"github.com/spf13/cobra"
 	"log"
 	"strings"

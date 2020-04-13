@@ -1,12 +1,12 @@
 package sheets
 
 import (
-	"chpunk/export/googledoc"
-	"chpunk/google/doc"
-	"chpunk/google/files"
-	"chpunk/import/sheets"
-	"chpunk/settings"
-	"chpunk/translation"
+	"chpunk/internal/export/googledoc"
+	"chpunk/internal/google/doc"
+	"chpunk/internal/google/files"
+	"chpunk/internal/import/sheets"
+	"chpunk/internal/settings"
+	"chpunk/internal/translation"
 	"chpunk/web/middlewares"
 	"net/http"
 
@@ -44,6 +44,7 @@ func Create(ctx echo.Context) error {
 	}
 
 	s := driveClient(ctx)
+
 	f, err := s.CreateSpreadsheet(params.Name)
 	if err != nil {
 		return err

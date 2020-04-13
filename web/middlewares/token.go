@@ -1,7 +1,7 @@
 package middlewares
 
 import (
-	"chpunk/google/client"
+	"chpunk/internal/google/client"
 	"encoding/base64"
 	"encoding/json"
 	"github.com/labstack/echo/v4"

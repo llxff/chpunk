@@ -1,9 +1,9 @@
 package translation
 
 import (
-	"chpunk/settings"
-	"chpunk/translators/deepl"
-	"chpunk/translators/yandex"
+	"chpunk/internal/settings"
+	"chpunk/internal/translators/deepl"
+	"chpunk/internal/translators/yandex"
 	"fmt"
 	"sync"
 )
