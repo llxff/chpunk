@@ -38,6 +38,8 @@ To start frontend with API:
 
 `$ make`
 
+<img src="https://user-images.githubusercontent.com/866273/79149739-e4deec00-7dc7-11ea-92d2-955569fb5988.gif" />
+
 ## This is a pet-project
 
 I wrote it to help my wife 👩‍💻 with her work, don't expect much from it. No tests, DRY, SOLID and other buzzwords, this code has been written for fun.
