@@ -4,26 +4,31 @@ import (
 	"chpunk/translation"
 	"fmt"
 	"io"
-	"log"
 	"os"
 )
 
-func Export(c []*translation.Content, fileName string) {
-	f, err := os.Create(fileName)
+type Container struct {
+	FileName string
+}
+
+func (c *Container) Export(translations []*translation.Content) error {
+	f, err := os.Create(c.FileName)
 
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
 
-	for _, t := range c {
+	for _, t := range translations {
 		appendToFile(t, f)
 	}
 
 	err = f.Close()
 
 	if err != nil {
-		log.Fatalln(err)
+		return err
 	}
+
+	return nil
 }
 
 func appendToFile(c *translation.Content, f io.Writer) {

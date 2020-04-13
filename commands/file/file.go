@@ -6,6 +6,7 @@ import (
 	"chpunk/settings"
 	"chpunk/translation"
 	"github.com/spf13/cobra"
+	"log"
 	"strings"
 )
 
@@ -29,5 +30,10 @@ func run(_ *cobra.Command, args []string) {
 		outputFile = "translation.txt"
 	}
 
-	textfile.Export(translations, outputFile)
+	exporter := &textfile.Container{FileName: outputFile}
+	err := exporter.Export(translations)
+
+	if err != nil {
+		log.Fatalln(err)
+	}
 }

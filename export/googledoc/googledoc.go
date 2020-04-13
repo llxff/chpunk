@@ -1,34 +1,36 @@
-package docs
+package googledoc
 
 import (
+	"chpunk/google/doc"
 	"chpunk/translation"
 	"google.golang.org/api/docs/v1"
-	"net/http"
 )
 
-type Client struct {
-	HTTPClient *http.Client
+type Container struct {
+	Client *doc.Client
+	DocID  string
 }
 
-func (c *Client) NewChapter(docID string, translations []*translation.Content) error {
-	srv, err := docs.New(c.HTTPClient)
+func (c *Container) Export(translations []*translation.Content) error {
+	srv, err := c.Client.Service()
 	if err != nil {
 		return err
 	}
 
-	doc, err := srv.Documents.Get(docID).Do()
+	d, err := srv.Documents.Get(c.DocID).Do()
 	if err != nil {
 		return err
 	}
 
-	var requests []*docs.Request
+	requests := make([]*docs.Request, 0)
 
 	var ind int64
 	ind = 1
 
-	l := len(doc.Body.Content)
+	l := len(d.Body.Content)
 	if l > 2 {
-		ind = doc.Body.Content[l-1].EndIndex - 1
+		ind = d.Body.Content[l-1].EndIndex - 1
+
 		requests = append(requests, &docs.Request{
 			InsertPageBreak: &docs.InsertPageBreakRequest{
 				Location: &docs.Location{
@@ -113,7 +115,7 @@ func (c *Client) NewChapter(docID string, translations []*translation.Content) e
 	uReq := &docs.BatchUpdateDocumentRequest{
 		Requests: requests,
 	}
-	_, err = srv.Documents.BatchUpdate(docID, uReq).Do()
+	_, err = srv.Documents.BatchUpdate(c.DocID, uReq).Do()
 
 	return err
 }

@@ -1,8 +1,9 @@
 package doc
 
 import (
+	"chpunk/export/googledoc"
 	"chpunk/google/client"
-	"chpunk/google/docs"
+	"chpunk/google/doc"
 	"chpunk/import/sheets"
 	"chpunk/settings"
 	"chpunk/translation"
@@ -25,9 +26,12 @@ func run(_ *cobra.Command, args []string) {
 	translations := translation.Translate(*config, lines)
 
 	c := client.Get("token.json")
-	d := &docs.Client{HTTPClient: c}
+	exporter := &googledoc.Container{
+		Client: &doc.Client{HTTPClient: c},
+		DocID:  args[1],
+	}
 
-	err := d.NewChapter(args[1], translations)
+	err := exporter.Export(translations)
 	if err != nil {
 		log.Fatalln(err)
 	}
