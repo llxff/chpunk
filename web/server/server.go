@@ -4,16 +4,23 @@ import (
 	"chpunk/web/controllers/login"
 	"chpunk/web/controllers/sheets"
 	"chpunk/web/middlewares"
-	"encoding/json"
 	"fmt"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"log"
 )
 
 func Start(port string) {
 	e := echo.New()
 
+	setupMiddleware(e)
+	setupRoutes(e)
+
+	printRoutes(e.Routes())
+
+	e.Logger.Fatal(e.Start(":" + port))
+}
+
+func setupMiddleware(e *echo.Echo) {
 	e.Pre(middleware.RemoveTrailingSlash())
 
 	e.Use(middleware.Recover())
@@ -21,7 +28,9 @@ func Start(port string) {
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:8080"},
 	}))
+}
 
+func setupRoutes(e *echo.Echo) {
 	e.POST("/auth", login.Auth)
 	e.POST("/oauth/callback", login.Callback)
 
@@ -31,13 +40,13 @@ func Start(port string) {
 
 	s.POST("", sheets.Index)
 	s.POST("/:id", sheets.Get)
+}
 
-	data, err := json.MarshalIndent(e.Routes(), "", "  ")
-	if err != nil {
-		log.Fatal(err)
+func printRoutes(routes []*echo.Route) {
+	for _, route := range routes {
+		switch route.Method {
+		case "GET", "POST", "PUT", "PATCH", "DELETE":
+			fmt.Printf("%-6s %s\n", route.Method, route.Path)
+		}
 	}
-
-	fmt.Println(string(data))
-
-	e.Logger.Fatal(e.Start(":" + port))
 }
