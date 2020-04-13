@@ -3,7 +3,10 @@
 main
 input.csv
 translation.txt
-*.json
+
+google.json
+token.json
+translators.json
 
 website/node_modules
 website/dist
