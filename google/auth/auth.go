@@ -10,7 +10,10 @@ import (
 )
 
 const credentialsFile = "google.json"
-const scopes = "https://www.googleapis.com/auth/spreadsheets.readonly"
+
+var scopes = []string{
+	drive.DriveFileScope,
+}
 
 func GetAuthURL() string {
 	return config().AuthCodeURL("state-token", oauth2.AccessTypeOffline)
@@ -31,7 +34,7 @@ func config() *oauth2.Config {
 		log.Fatalf("Unable to read client secret file: %v", err)
 	}
 
-	config, err := google.ConfigFromJSON(b, scopes, drive.DriveMetadataReadonlyScope)
+	config, err := google.ConfigFromJSON(b, scopes...)
 	if err != nil {
 		log.Fatalf("Unable to parse client secret file to config: %v", err)
 	}

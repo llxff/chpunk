@@ -1,6 +1,7 @@
 package server
 
 import (
+	"chpunk/web/controllers/documents"
 	"chpunk/web/controllers/login"
 	"chpunk/web/controllers/sheets"
 	"chpunk/web/middlewares"
@@ -35,11 +36,15 @@ func setupRoutes(e *echo.Echo) {
 	e.POST("/oauth/callback", login.Callback)
 
 	s := e.Group("/sheets")
-
 	s.Use(middlewares.Token())
+	s.POST("", sheets.Create)
+	s.POST("/search", sheets.Index)
+	s.POST("/:sheetID/translate/:docID", sheets.Translate)
 
-	s.POST("", sheets.Index)
-	s.POST("/:id", sheets.Get)
+	d := e.Group("/documents")
+	d.Use(middlewares.Token())
+	d.POST("", documents.Create)
+	d.POST("/search", documents.Index)
 }
 
 func printRoutes(routes []*echo.Route) {

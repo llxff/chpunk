@@ -1,19 +1,31 @@
 package sheets
 
 import (
+	"chpunk/export/googledoc"
+	"chpunk/google/doc"
 	"chpunk/google/files"
-	"chpunk/google/spreadsheets"
+	"chpunk/import/sheets"
+	"chpunk/settings"
+	"chpunk/translation"
 	"chpunk/web/middlewares"
 	"net/http"
 
 	"github.com/labstack/echo/v4"
 )
 
-func Index(ctx echo.Context) error {
-	c := ctx.Get(middlewares.GoogleClient).(*http.Client)
-	s := files.Client{HTTPClient: c}
+type indexRequest struct {
+	Filter string `json:"filter"`
+}
 
-	f, err := s.Files(100)
+func Index(ctx echo.Context) error {
+	var params indexRequest
+	if err := ctx.Bind(&params); err != nil {
+		return err
+	}
+
+	s := driveClient(ctx)
+
+	f, err := s.Spreadsheets(100, params.Filter)
 	if err != nil {
 		return err
 	}
@@ -21,12 +33,50 @@ func Index(ctx echo.Context) error {
 	return ctx.JSON(http.StatusOK, f)
 }
 
-func Get(ctx echo.Context) error {
-	c := ctx.Get(middlewares.GoogleClient).(*http.Client)
+type createRequest struct {
+	Name string `json:"name"`
+}
 
-	s := &spreadsheets.Client{HTTPClient: c}
+func Create(ctx echo.Context) error {
+	var params createRequest
+	if err := ctx.Bind(&params); err != nil {
+		return err
+	}
 
-	data := s.Values(ctx.Param("id"), "A1:A")
+	s := driveClient(ctx)
+	f, err := s.CreateSpreadsheet(params.Name)
+	if err != nil {
+		return err
+	}
 
-	return ctx.JSON(http.StatusOK, data)
+	return ctx.JSON(200, f)
+}
+
+func Translate(ctx echo.Context) error {
+	sheetID := ctx.Param("sheetID")
+	docID := ctx.Param("docID")
+
+	config := settings.Get()
+	lines := sheets.Import(sheetID)
+	translations := translation.Translate(*config, lines)
+
+	exporter := &googledoc.Container{
+		Client: &doc.Client{HTTPClient: googleClient(ctx)},
+		DocID:  docID,
+	}
+
+	err := exporter.Export(translations)
+	if err != nil {
+		return err
+	}
+
+	return ctx.JSON(200, "OK")
+}
+
+func driveClient(ctx echo.Context) *files.Client {
+	return &files.Client{HTTPClient: googleClient(ctx)}
+}
+
+func googleClient(ctx echo.Context) *http.Client {
+	return ctx.Get(middlewares.GoogleClient).(*http.Client)
 }
