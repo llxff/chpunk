@@ -23,8 +23,8 @@ Use "translate [command] --help" for more information about a command.
 
 Setup:
 
-1. Enable Google Docs API https://developers.google.com/docs/api/quickstart/go
-2. Set api keys for Deepl and Yandex translators to `translators.json` (The project uses public version of [Yandex Translate](https://translate.yandex.ru/), for some reasons it makes better translation than official API)
+1. Enable Google Docs API https://developers.google.com/docs/api/quickstart/go and put credentials file to `configs/google.json`
+2. Set api keys for Deepl and Yandex translators to `configs/translators.json` (The project uses public version of [Yandex Translate](https://translate.yandex.ru/), for some reasons it makes better translation than official API)
 
 ## Frontend:
 

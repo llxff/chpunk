@@ -1,27 +1,51 @@
 <template>
-  <div class="home">
-    <button v-on:click="logout">Logout</button>
-    <br/>
-    <input size=50 v-model="projectName" placeholder="Project name">
-    <br />
-    <select v-model="selectedSheetId">
-      <option v-for="file in sheets" v-bind:value="file.id">
-        {{ file.name }}
-      </option>
-    </select>
-    <button v-on:click="createNewSpreadsheet" v-if="!selectedSheetId">Create new spreadsheet</button>
-    <button v-on:click="translate">Translate</button>
-    <select v-model="selectedDocId">
-      <option v-for="file in docs" v-bind:value="file.id">
-        {{ file.name }}
-      </option>
-    </select>
-    <a :href="docSrc" target="_blank" v-if="selectedDocId">Open document</a>
-    <button v-on:click="createNewDocument">Create new doc</button>
-    <input type="checkbox" v-model="previewDoc" />Preview doc
-    <br />
-    <iframe :src="src" v-if="selectedSheetId" v-bind:class="{ full: !previewDoc }" />
-    <iframe :src="docSrc" v-if="selectedDocId && previewDoc" />
+  <div class="fluid-container">
+    <div class="row">
+      <div class="col-lg-10 menu">
+        <form class="form-inline">
+          <div class="form-group mb-2 mr-sm-2">
+            <input size=50 v-model="projectName" placeholder="Project name" class="form-control">
+          </div>
+          <div class="form-group mb-2 mr-sm-2">
+            <select class="form-control" v-model="selectedSheetId">
+              <option v-for="file in sheets" v-bind:value="file.id">
+                {{ file.name }}
+              </option>
+            </select>
+          </div>
+          <div class="form-group mb-2 mr-sm-2">
+            <div class="input-group">
+              <select class="custom-select" v-model="selectedDocId">
+                <option v-for="file in docs" v-bind:value="file.id">
+                  {{ file.name }}
+                </option>
+              </select>
+
+              <div class="input-group-append">
+                <button type="button" class="btn btn-secondary btn-sm" v-on:click="translate">Translate</button>
+                <button type="button" class="btn btn-secondary btn-sm dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  <span class="sr-only">Toggle Dropdown</span>
+                </button>
+                <div class="dropdown-menu">
+                  <span class="dropdown-item-text"><label for="preview" class="inline">Preview</label> <input id="preview" type="checkbox" v-model="previewDoc" /></span>
+                  <a class="dropdown-item" :href="docSrc" target="_blank" v-if="selectedDocId">Open</a>
+                  <div role="separator" class="dropdown-divider"></div>
+                  <button class="dropdown-item" v-on:click="createNewDocument">Create new</button>
+                  <button class="dropdown-item" v-on:click="createNewSpreadsheet" v-if="!selectedSheetId">Create new spreadsheet</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-2 text-right logout">
+        <button v-on:click="logout" class="btn btn-danger" type="button">Logout</button>
+      </div>
+    </div>
+    <div class="row">
+      <iframe :src="src" v-if="selectedSheetId" v-bind:class="{ full: !previewDoc }" />
+      <iframe :src="docSrc" v-if="selectedDocId && previewDoc" />
+    </div>
   </div>
 </template>
 
@@ -138,5 +162,17 @@ export default {
 
   iframe.full {
     width: 100%
+  }
+
+  label.inline {
+    display: inline
+  }
+
+  div.menu {
+    padding: 2px
+  }
+
+  div.logout {
+    padding: 2px
   }
 </style>

@@ -25,4 +25,9 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+  div#app {
+    padding: 0 15px;
+    margin-top: 5px;
+  }
+</style>

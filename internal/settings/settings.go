@@ -12,7 +12,7 @@ type Config struct {
 }
 
 func Get() *Config {
-	data, err := ioutil.ReadFile("translators.json")
+	data, err := ioutil.ReadFile("configs/translators.json")
 	if err != nil {
 		log.Fatalln(err)
 	}

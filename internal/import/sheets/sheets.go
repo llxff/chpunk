@@ -7,7 +7,7 @@ import (
 )
 
 func Import(fileName string) (lines []string) {
-	c := client.Get("token.json")
+	c := client.Get("configs/token.json")
 	s := &spreadsheets.Client{HTTPClient: c}
 
 	data := s.Values(fileName, "A1:A")

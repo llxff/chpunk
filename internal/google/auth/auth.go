@@ -9,7 +9,7 @@ import (
 	"log"
 )
 
-const credentialsFile = "google.json"
+const credentialsFile = "configs/google.json"
 
 var scopes = []string{
 	drive.DriveFileScope,

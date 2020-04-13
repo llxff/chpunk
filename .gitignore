@@ -4,9 +4,7 @@ main
 input.csv
 translation.txt
 
-google.json
-token.json
-translators.json
+configs/*.json
 
 website/node_modules
 website/dist

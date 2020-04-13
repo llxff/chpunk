@@ -16,7 +16,7 @@ import (
 	"google.golang.org/api/drive/v3"
 )
 
-const credentialsFile = "google.json"
+const credentialsFile = "configs/google.json"
 
 // Retrieve a token, saves the token, then returns the generated client.
 func Get(tokenFile string) *http.Client {
