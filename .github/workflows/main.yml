@@ -6,11 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: nickhstr/action-setup-golangci-lint@v0.1.0
+        uses: reviewdog/action-golangci-lint@82a29cf18d098bc46657b03195d7185dd96701ce
         with:
-          version: 1.20.1
-      - uses: actions/setup-ruby@v1
-        with:
-          ruby-version: '2.6'
-      - run: gem install pronto pronto-golang
-      - run: PRONTO_PULL_REQUEST_ID="$(jq --raw-output .number "$GITHUB_EVENT_PATH")" PRONTO_GITHUB_ACCESS_TOKEN="${{ secrets.GITHUB_TOKEN }}" pronto run -f github_status github_pr -c origin/master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          golangci_lint_flags: "-v"
