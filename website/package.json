@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "acorn": "^7.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "core-js": "^3.6.4",
     "minimist": "^1.2.5",
     "vue": "^2.6.11",
