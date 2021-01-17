@@ -1,6 +1,10 @@
 # chpunk
 
-Helps with books translation.
+Helps with books translation. The project works with DeepL and Yandex Translate.
+
+## Yandex Translate
+
+The project uses public version of [Yandex Translate](https://translate.yandex.ru/), for some reasons it makes better translation than official API.
 
 ## Usage
 ```
@@ -24,7 +28,7 @@ Use "translate [command] --help" for more information about a command.
 Setup:
 
 1. Enable Google Docs API https://developers.google.com/docs/api/quickstart/go and put credentials file to `configs/google.json`
-2. Set api keys for Deepl and Yandex translators to `configs/translators.json` (The project uses public version of [Yandex Translate](https://translate.yandex.ru/), for some reasons it makes better translation than official API)
+2. Set your api key for Deepl in `configs/translators.json`
 
 ## Frontend:
 
@@ -42,4 +46,4 @@ To start frontend with API:
 
 ## This is a pet-project
 
-I wrote it to help my wife 👩‍💻 with her work, don't expect much from it. No tests, DRY, SOLID and other buzzwords, this code has been written for fun.
+I wrote it to help my wife 👩‍💻 with her work, don't expect much from it.
